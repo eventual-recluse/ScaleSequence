@@ -701,19 +701,20 @@ protected:
 		}
 		
 		// Scale glide, continuous tuning. Currently done via division of the remaining difference to target
-		// for every call of run method (TODO improve this!)
-		for (int32_t i = 0; i < 128; i++)
+		// for every frame
+	        for (uint32_t fr = 0; fr < frames; ++fr)
 		{
-			double difference = target_frequencies_in_hz[i] - frequencies_in_hz[i];
-			if (std::fabs(difference) < 0.0001f)
-				frequencies_in_hz[i] = target_frequencies_in_hz[i];
-			else
-				frequencies_in_hz[i] = frequencies_in_hz[i] + (difference / fParameters[kParameterScaleGlide]);
+			for (int32_t i = 0; i < 128; i++)
+			{
+				double difference = target_frequencies_in_hz[i] - frequencies_in_hz[i];
+				if (std::fabs(difference) < 0.0001f)
+					frequencies_in_hz[i] = target_frequencies_in_hz[i];
+				else
+					frequencies_in_hz[i] = frequencies_in_hz[i] + (difference / (fParameters[kParameterScaleGlide] * 1000.0));
+			}
+			// Set MTS-ESP Scale
+			MTS_SetNoteTunings(frequencies_in_hz);
 		}
-		
-		// Set MTS-ESP Scale
-		MTS_SetNoteTunings(frequencies_in_hz);
-        
     }
     
 
