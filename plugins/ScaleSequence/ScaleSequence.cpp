@@ -322,6 +322,14 @@ protected:
             parameter.symbol = "currentstep";
             parameter.hints = kParameterIsOutput;
 			break;
+		case kParameterLoopPoint:
+            parameter.name = "Loop Point";
+            parameter.symbol = "looppoint";
+            parameter.hints = kParameterIsAutomatable|kParameterIsInteger;
+            parameter.ranges.min = controlLimits[index].first;
+            parameter.ranges.max = controlLimits[index].second;
+            parameter.ranges.def = ParameterDefaults[index];
+            break;
         }
     }
 
@@ -589,12 +597,13 @@ protected:
         
         
         int32_t stepIndex = 0;
+        int32_t loopPoint = static_cast<int32_t>(fParameters[kParameterLoopPoint]);
         
         // Which step are we on?
         if (fParameters[kParameterMeasure] == 0) // using beats
-            stepIndex = static_cast<int32_t>(std::floor(beatsFromStart / fParameters[kParameterMultiplier])) % 16;
+            stepIndex = static_cast<int32_t>(std::floor(beatsFromStart / fParameters[kParameterMultiplier])) % loopPoint;
         else if (fParameters[kParameterMeasure] == 1) // using bars
-            stepIndex = static_cast<int32_t>(std::floor(bar / fParameters[kParameterMultiplier])) % 16;
+            stepIndex = static_cast<int32_t>(std::floor(bar / fParameters[kParameterMultiplier])) % loopPoint;
         
         // Set current step parameter for UI feedback
         fParameters[kParameterCurrentStep] = static_cast<float>((stepIndex + 1) * 0.0625f);

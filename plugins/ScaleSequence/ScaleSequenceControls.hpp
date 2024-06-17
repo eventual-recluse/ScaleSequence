@@ -31,7 +31,8 @@ enum Parameters {
     kParameterStep16     = 18,
     kParameterOffset     = 19,
     kParameterCurrentStep = 20,
-    kParameterCount      = 21
+    kParameterLoopPoint  = 21,
+    kParameterCount      = 22
 };
 
 enum States {
@@ -68,7 +69,8 @@ static const std::array<std::pair<float, float>, kParameterCount> controlLimits 
     {1.0f, 4.0f},    //kParameterStep15,
     {1.0f, 4.0f},    //kParameterStep16,
     {-1.0f, 1.0f},   //kParameterOffset
-    {0.0f, 1.0f}    //kParameterCurrentStep
+    {0.0f, 1.0f},    //kParameterCurrentStep
+    {2.0f, 16.0f}    //kParameterLoopPoint
 }};
 
 static const float ParameterDefaults[kParameterCount] = {
@@ -92,7 +94,8 @@ static const float ParameterDefaults[kParameterCount] = {
     1.0f, //kParameterStep15,
     1.0f, //kParameterStep16,
     0.0f, //kParameterOffset
-    1.0f  //kParameterCurrentStep (default not used)
+    1.0f, //kParameterCurrentStep (default not used)
+    16.0f //kParameterLoopPoint
 	
 };
 

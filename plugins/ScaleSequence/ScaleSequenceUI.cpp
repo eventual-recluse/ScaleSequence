@@ -75,6 +75,9 @@ public:
 		utuning3 = Tunings::Tuning(); 
 		utuning4 = Tunings::Tuning(); 
 		
+		ui_multiplier = static_cast<int>(ParameterDefaults[kParameterMultiplier]);
+		ui_loopPoint = static_cast<int>(ParameterDefaults[kParameterLoopPoint]);
+		
         // account for scaling
         scale_factor = getScaleFactor();
         if (scale_factor == 0) {scale_factor = 1.0;}
@@ -182,6 +185,9 @@ protected:
         {
         case kParameterMultiplier:
             ui_multiplier = static_cast<int>(fParameters[kParameterMultiplier]);
+            break;
+        case kParameterLoopPoint:
+            ui_loopPoint = static_cast<int>(fParameters[kParameterLoopPoint]);
             break;
 		
         default:
@@ -1130,6 +1136,21 @@ protected:
                 editParameter(kParameterScaleGlide, false);
             }
             
+            // Loop Point
+            if (ImGui::SliderInt("Loop Point", &ui_loopPoint, static_cast<int>(controlLimits[kParameterLoopPoint].first), static_cast<int>(controlLimits[kParameterLoopPoint].second)))
+            {
+                if (ImGui::IsItemActivated())
+                    editParameter(kParameterLoopPoint, true);
+                
+                fParameters[kParameterLoopPoint] = static_cast<float>(ui_loopPoint);
+                setParameterValue(kParameterLoopPoint, fParameters[kParameterLoopPoint]);
+            }
+			
+			 if (ImGui::IsItemDeactivated())
+            {
+                editParameter(kParameterLoopPoint, false);
+            }
+            
 			ImGui::EndChild(); // bottom left pane
 			
 			ImGui::SameLine();
@@ -1265,8 +1286,8 @@ private:
     ImFont* lektonRegularFont;
 
     // int and bool variables required for Dear ImGui SliderInt and CheckBox widgets.
-    int ui_multiplier = static_cast<int>(ParameterDefaults[kParameterMultiplier]);
-
+    int ui_multiplier;
+	int ui_loopPoint;
     
 
     
