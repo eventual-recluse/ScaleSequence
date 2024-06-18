@@ -16,44 +16,7 @@ More parameters:
 **Step Type:** The steps can be in beats or bars.<br>
 **Glide:** The glide amount for smoothly switching between scales. The higher the glide amount, the longer it will take to switch completely. (1.00 means no glide.)<br>
 **Offset:** This setting allows the timing of the scale switching be moved a little earlier or later. Up to -1 or +1 beat or bar (depending on the step type chosen).<br>
-
-# Build instructions
-
-## Build Instructions: Ubuntu
-Install dependencies, clone this repository, enter the cloned repository, then make.
-```
-sudo apt-get install build-essential git pkg-config freeglut3-dev
-git clone --recursive https://github.com/eventual-recluse/ScaleSequence.git
-cd ScaleSequence
-make
-```
-After building, the plugins can be found in the 'bin' folder.
-
-## Build Instructions: Windows.
-ScaleSequence can be built using [msys2](https://www.msys2.org/)
-After installing msys2, launch the MinGW64 shell and enter the following commands to install dependencies, clone this repository, enter the cloned repository, then make.
-```
-pacman -S base-devel git mingw-w64-x86_64-gcc mingw-w64-x86_64-freeglut
-git clone --recursive https://github.com/eventual-recluse/ScaleSequence.git
-cd ScaleSequence
-make
-```
-After building, the plugins can be found in the 'bin' folder.
-
-## Building on macOS.
-ScaleSequence can be built on macOS using the Xcode Command Line Tools.
-
-Install Xcode Command Line Tools from the Terminal:
-```
-xcode-select --install
-```
-Then enter the following commands in the Terminal to clone this repository, enter the cloned repository, then make.
-```
-git clone --recursive https://github.com/eventual-recluse/ScaleSequence.git
-cd ScaleSequence
-make
-```
-After building, the plugins can be found in the 'bin' folder.
+**Loop Point:** Sets the step at which the sequence loops back to the start.
 
 # Credits
 [DISTRHO Plugin Framework.](https://github.com/DISTRHO/DPF) ISC license.
