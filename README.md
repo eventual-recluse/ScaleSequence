@@ -2,7 +2,7 @@
 
 ScaleSequence is a prototype [MTS-ESP](https://github.com/ODDSound/MTS-ESP) master plugin, which allows the dynamic switching of the current scale according to a set sequence.
 
-![ScaleSequence](https://github.com/eventual-recluse/ScaleSequence/blob/main/plugins/ScaleSequence/ScaleSequence_screenshot.png "ScaleSequence")<br/>
+![ScaleSequence](https://raw.githubusercontent.com/eventual-recluse/ScaleSequence/main/plugins/ScaleSequence/ScaleSequence_screenshot.png "ScaleSequence")<br/>
 
 # Settings
 

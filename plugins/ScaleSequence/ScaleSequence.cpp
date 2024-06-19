@@ -150,16 +150,18 @@ protected:
             parameter.hints = kParameterIsAutomatable|kParameterIsInteger;
             parameter.name   = "Measure";
             parameter.symbol = "measure";
-            parameter.enumValues.count = 2;
+            parameter.enumValues.count = 3;
             parameter.enumValues.restrictedMode = true;
             {
-                ParameterEnumerationValue* const values = new ParameterEnumerationValue[2];
+                ParameterEnumerationValue* const values = new ParameterEnumerationValue[3];
                 parameter.enumValues.values = values;
 
                 values[0].label = "Beats";
                 values[0].value = 0;
                 values[1].label = "Bars";
                 values[1].value = 1;
+                values[2].label = "MIDI Note";
+                values[2].value = 2;
             }
             parameter.ranges.min = controlLimits[index].first;
             parameter.ranges.max = controlLimits[index].second;
@@ -574,36 +576,48 @@ protected:
       Run/process function for plugins without MIDI input.
       @note Some parameters might be null if there are no audio inputs or outputs.
     */
-    void run(const float** inputs, float** outputs, uint32_t frames) override
+    void run(const float** inputs, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount) override
     {
-       
-            
-        const TimePosition& timePos(getTimePosition());
-        
-        double beats_per_bar = timePos.bbt.beatsPerBar;
-        // In DISTRHO DPF, the first bar == 1. But our calculations require first bar == 0
-        double bar = timePos.bbt.bar - 1;
-        // In DISTRHO DPF, the first beat of the bar == 1. Our calculations require first beat of the bar == 0
-        double beat = timePos.bbt.beat - 1;
-        double beatFraction   = timePos.bbt.tick / timePos.bbt.ticksPerBeat;
-                
-        double beatsFromStart = (bar * beats_per_bar) + beat + beatFraction;
-                
-        // Offset. Might cause weirdness at the start of the track. But stepIndex below should be ignored if less than zero.
-        if (fParameters[kParameterMeasure] == 0) // using beats
-            beatsFromStart -= fParameters[kParameterOffset];
-        else if (fParameters[kParameterMeasure] == 1) //using bars
-            bar -= fParameters[kParameterOffset];
-        
-        
-        int32_t stepIndex = 0;
+		int32_t stepIndex = static_cast<int32_t>(fParameters[kParameterCurrentStep] / 0.0625f) -1;
         int32_t loopPoint = static_cast<int32_t>(fParameters[kParameterLoopPoint]);
         
-        // Which step are we on?
-        if (fParameters[kParameterMeasure] == 0) // using beats
-            stepIndex = static_cast<int32_t>(std::floor(beatsFromStart / fParameters[kParameterMultiplier])) % loopPoint;
-        else if (fParameters[kParameterMeasure] == 1) // using bars
-            stepIndex = static_cast<int32_t>(std::floor(bar / fParameters[kParameterMultiplier])) % loopPoint;
+        // Loop through the MIDI events. We do this whatever the setting, as we will pass them all through to MIDI out
+		for (uint32_t currentMidiEvent = 0; currentMidiEvent < midiEventCount; ++currentMidiEvent)
+		{
+		     if (midiEvents[currentMidiEvent].size <= 3)
+		     {   uint8_t data0 = midiEvents[currentMidiEvent].data[0];
+	             if ( ((data0 & 0xF0) == 0x90) and (fParameters[kParameterMeasure] == 2) ) // Received a Note on, and using MIDI note on to advance step
+                     stepIndex = (stepIndex + 1) % loopPoint;
+			 }
+			 // Pass all MIDI events through
+			 writeMidiEvent(midiEvents[currentMidiEvent]);
+		}
+        
+		if (fParameters[kParameterMeasure] != 2) // Using beats or bars to find step position
+		{
+			stepIndex = 0;
+            const TimePosition& timePos(getTimePosition());
+        
+            double beats_per_bar = timePos.bbt.beatsPerBar;
+            // In DISTRHO DPF, the first bar == 1. But our calculations require first bar == 0
+            double bar = timePos.bbt.bar - 1;
+            // In DISTRHO DPF, the first beat of the bar == 1. Our calculations require first beat of the bar == 0
+            double beat = timePos.bbt.beat - 1;
+            double beatFraction   = timePos.bbt.tick / timePos.bbt.ticksPerBeat;
+            double beatsFromStart = (bar * beats_per_bar) + beat + beatFraction;
+                
+            // Offset. Might cause weirdness at the start of the track. But stepIndex below should be ignored if less than zero.
+            if (fParameters[kParameterMeasure] == 0) // using beats
+                beatsFromStart -= fParameters[kParameterOffset];
+            else if (fParameters[kParameterMeasure] == 1) //using bars
+                bar -= fParameters[kParameterOffset];
+        
+            // Which step are we on?
+            if (fParameters[kParameterMeasure] == 0) // using beats
+                stepIndex = static_cast<int32_t>(std::floor(beatsFromStart / fParameters[kParameterMultiplier])) % loopPoint;
+            else if (fParameters[kParameterMeasure] == 1) // using bars
+                stepIndex = static_cast<int32_t>(std::floor(bar / fParameters[kParameterMultiplier])) % loopPoint;
+		}
         
         // Set current step parameter for UI feedback
         fParameters[kParameterCurrentStep] = static_cast<float>((stepIndex + 1) * 0.0625f);

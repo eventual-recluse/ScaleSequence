@@ -1158,7 +1158,7 @@ protected:
 			ImGui::BeginChild("bottom right pane", ImVec2(UI_COLUMN_WIDTH, 0));
 			
 			// Measure
-            const char* measure_types[2] = { "Beats", "Bars"};
+            const char* measure_types[3] = { "Beats", "Bars", "MIDI Note"};
             const char* current_measure_type = measure_types[static_cast<int32_t>(fParameters[kParameterMeasure])];
 
             ImGuiStyle& measure_style = ImGui::GetStyle();
@@ -1223,7 +1223,7 @@ protected:
                         editParameter(kParameterMeasure, true);
                         
                 int32_t current_measure_index = static_cast<int32_t>(fParameters[kParameterMeasure]);
-                if (current_measure_index < 1)
+                if (current_measure_index < 2)
                 {
                     current_measure_index += 1;
                     current_measure_type = measure_types[current_measure_index];

@@ -49,7 +49,7 @@ enum States {
 
 static const std::array<std::pair<float, float>, kParameterCount> controlLimits =
 {{
-    {0.0f, 1.0f},    //kParameterMeasure
+    {0.0f, 2.0f},    //kParameterMeasure
 	{1.0f, 12.0f},   //kParameterMultiplier,
 	{1.0f, 100.0f}, //kParameterScaleGlide
     {1.0f, 4.0f},    //kParameterStep1,
