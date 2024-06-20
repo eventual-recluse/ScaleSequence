@@ -319,11 +319,6 @@ protected:
             parameter.ranges.max = controlLimits[index].second;
             parameter.ranges.def = ParameterDefaults[index];
             break;
-		case kParameterCurrentStep:
-			parameter.name = "Current Step";
-            parameter.symbol = "currentstep";
-            parameter.hints = kParameterIsOutput;
-			break;
 		case kParameterLoopPoint:
             parameter.name = "Loop Point";
             parameter.symbol = "looppoint";
@@ -332,6 +327,11 @@ protected:
             parameter.ranges.max = controlLimits[index].second;
             parameter.ranges.def = ParameterDefaults[index];
             break;
+        case kParameterCurrentStep:
+			parameter.name = "Current Step";
+            parameter.symbol = "currentstep";
+            parameter.hints = kParameterIsOutput;
+			break;
         }
     }
 
