@@ -22,6 +22,10 @@
 #define DISTRHO_PLUGIN_URI   "https://github.com/eventual-recluse/ScaleSequence"
 #define DISTRHO_PLUGIN_CLAP_ID "ScaleSequence.eventual-recluse"
 
+#define DISTRHO_PLUGIN_LV2_CATEGORY "lv2:InstrumentPlugin"
+#define DISTRHO_PLUGIN_VST3_CATEGORIES "Instrument"
+#define DISTRHO_PLUGIN_CLAP_FEATURES "instrument"
+
 #define DISTRHO_PLUGIN_HAS_UI          1
 #define DISTRHO_UI_USE_CUSTOM          1
 #define DISTRHO_UI_CUSTOM_INCLUDE_PATH "DearImGui.hpp"

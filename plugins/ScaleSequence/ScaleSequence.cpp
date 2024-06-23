@@ -573,7 +573,7 @@ protected:
     * Audio/MIDI Processing */
 
    /**
-      Run/process function for plugins without MIDI input.
+      Run/process function for plugins with MIDI input.
       @note Some parameters might be null if there are no audio inputs or outputs.
     */
     void run(const float** inputs, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount) override

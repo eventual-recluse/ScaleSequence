@@ -93,6 +93,9 @@ public:
         brunoAceStepFont = AddBrunoAceFont(scale_factor*1.3);
         brunoAceSCFont = AddBrunoAceSCFont(scale_factor);
         
+        show_error_popup = false;
+        errorText.clear();
+        
         // Set style and colours
         ImGuiStyle& uistyle = ImGui::GetStyle();
         
@@ -285,6 +288,9 @@ protected:
                 String noKbm("Standard KBM mapping");
                 fFileBaseName[stateId] = noScl;
                 fFileBaseName[stateId+4] = noKbm;
+                String tuningError(e.what());
+                errorText = "Tuning error:\n" + tuningError + "\nScale reset to standard tuning and mapping.";
+                show_error_popup = true;
                 //d_stdout("UI:");
                 //d_stdout(e.what());
 			}
@@ -295,6 +301,13 @@ protected:
 			tn = Tunings::Tuning(s, k);
 			String noScl("Standard SCL tuning");
 			fFileBaseName[stateId] = noScl;
+			
+			if (filename.isNotEmpty())
+			{
+				errorText = "Not a .scl file.\nSCL tuning reset to standard.";
+				show_error_popup = true;
+				setState(kStateKeys[stateId], "");
+			}
 		}
 	}
 	
@@ -318,6 +331,9 @@ protected:
                 String noKbm("Standard KBM mapping");
                 fFileBaseName[stateId - 4] = noScl;
                 fFileBaseName[stateId] = noKbm;
+                String tuningError(e.what());
+                errorText = "Tuning error:\n" + tuningError + "\nScale reset to standard tuning and mapping.";
+                show_error_popup = true;
                 //d_stdout("UI:");
                 //d_stdout(e.what());
 			}
@@ -328,6 +344,13 @@ protected:
 			tn = Tunings::Tuning(s, k);
 			String noKbm("Standard KBM mapping");
 			fFileBaseName[stateId] = noKbm;
+			
+			if (filename.isNotEmpty())
+			{
+				errorText = "Not a .kbm file.\nKBM mapping reset to standard.";
+				show_error_popup = true;
+				setState(kStateKeys[stateId], "");
+			}
 			
 		}
 	}
@@ -1259,6 +1282,18 @@ protected:
 			ImGui::EndChild(); // bottom right pane
 			
 			ImGui::EndChild(); // bottom pane
+			
+			// Error popup
+			if (show_error_popup)
+				ImGui::OpenPopup("error_popup");
+			if (ImGui::BeginPopup("error_popup"))
+			{
+				ImGui::PushFont(lektonRegularFont);
+				ImGui::Text(errorText);
+				ImGui::PopFont();
+				show_error_popup = false;
+				ImGui::EndPopup();
+			}
                        
 		}
 		ImGui::End();
@@ -1284,6 +1319,9 @@ private:
     ImFont* brunoAceStepFont;
     ImFont* brunoAceSCFont;
     ImFont* lektonRegularFont;
+    
+    bool show_error_popup;
+    String errorText;
 
     // int and bool variables required for Dear ImGui SliderInt and CheckBox widgets.
     int ui_multiplier;

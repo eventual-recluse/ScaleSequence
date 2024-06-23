@@ -13,10 +13,19 @@ The sequence has 16 steps. Set the scale for each step by clicking the sequence 
 More parameters:
 
 **Step Multi:** Multiplies the length of the step. e.g. if the step type is beats, 2 will set each step to 2 beats.<br>
-**Step Type:** The steps can be in beats or bars.<br>
+**Step Type:** The options are beats, bars or MIDI Note. If MIDI Note is chosem, the step advances every time a MIDI Note is received.<br>
 **Glide:** The glide amount for smoothly switching between scales. The higher the glide amount, the longer it will take to switch completely. (1.00 means no glide.)<br>
 **Offset:** This setting allows the timing of the scale switching be moved a little earlier or later. Up to -1 or +1 beat or bar (depending on the step type chosen).<br>
 **Loop Point:** Sets the step at which the sequence loops back to the start.
+
+To use this plugin, you will need Scala scale files (.scl) and / or keymapping files (.kbm).
+
+There is a large collection of .scl files at the [Scala Scale Archive.](https://huygens-fokker.org/microtonality/scales.html)
+
+A collection of .scl and .kbm files can be found in the [Sevish Tuning Pack.](https://sevish.com/music-resources/#tuning-files)
+
+# Builds
+Builds can be found at [Scale-Plugin-Builds.](https://github.com/eventual-recluse/Scale-Plugin-Builds)
 
 # Credits
 [DISTRHO Plugin Framework.](https://github.com/DISTRHO/DPF) ISC license.
